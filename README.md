@@ -43,7 +43,7 @@ Invalid, empty, zero, negative, and non-finite gallon values block Add fish and 
 - `src/main.ts` — DOM wiring and error boundary.
 - `tests/` — zero-dependency Node test suite.
 
-No backend or cross-session storage. Reloading starts a fresh tank. The build uses TypeScript and Tailwind CDN, with no runtime dependency beyond the browser.
+No backend or cross-session storage. Reloading starts a fresh tank. The build uses TypeScript and Tailwind CDN; it adds no npm runtime dependency.
 
 ## Source-size check
 
