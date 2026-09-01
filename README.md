@@ -1,20 +1,54 @@
 # Aquarium Tank Stocking Calculator
 
-Small, dependency-light TypeScript widget for checking freshwater stocking against the 1 inch of fish per gallon rule.
+Plan a freshwater tank one fish at a time. The widget compares your fish list with the classic **1 inch of fish per gallon** rule.
 
-## Run
+## Run locally
 
 ```sh
 npm install
 npm run build
 ```
 
-Open `dist/index.html` in a static host. Tests run with:
+Serve `dist/` with any static web server, then open `dist/index.html`. Tests run with:
 
 ```sh
 npm test
 ```
 
-No backend or cross-session storage. Fish presets stay fixed; tank state lives in memory and resets on reload.
+## How it works
 
-Source stays split by concern: `src/calculator.ts` is pure logic, `src/store.ts` owns in-memory state, and `src/render/` owns DOM updates.
+- Enter a tank size in US gallons.
+- Choose a preset species. Each option includes its emoji and fixed inch size.
+- Add fish to see total inches, ratio, status, and remaining capacity update live.
+- Remove individual fish. A 5-second Undo action restores the removed fish.
+- Reset clears the current tank and fish list.
+
+Status thresholds:
+
+| Ratio | Status |
+| --- | --- |
+| `≤ 0.7` | Safe |
+| `> 0.7` and `≤ 1.0` | Getting full |
+| `> 1.0` | Overcrowded |
+
+Invalid, empty, zero, negative, and non-finite gallon values block Add fish and show inline feedback. Existing fish stay in the list while the tank size is invalid.
+
+## Project structure
+
+- `src/species.ts` — immutable preset species data.
+- `src/calculator.ts` — pure totals, ratio, status, headroom, and formatting functions.
+- `src/validate.ts` — gallon input validation.
+- `src/store.ts` — in-memory state and pub-sub updates.
+- `src/render/` — form, status, fish list, and error-state rendering.
+- `src/main.ts` — DOM wiring and error boundary.
+- `tests/` — zero-dependency Node test suite.
+
+No backend or cross-session storage. Reloading starts a fresh tank. The build uses TypeScript and Tailwind CDN, with no runtime dependency beyond the browser.
+
+## Source-size check
+
+README, docs, `dist/`, and `node_modules/` are excluded from the challenge cap. Measure app source with:
+
+```sh
+wc -c index.html style.css src/*.ts src/render/*.ts tests/*.ts package.json tsconfig.json
+```
