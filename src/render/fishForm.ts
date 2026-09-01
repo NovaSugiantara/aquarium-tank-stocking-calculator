@@ -7,4 +7,4 @@ export const mountFishForm = (root: HTMLElement, species: readonly Species[], on
   form.addEventListener("submit", event => { event.preventDefault(); onSubmit() }); root.querySelector(".secondary")?.addEventListener("click", onReset)
   return { form, gallons, species: select, add, error }
 }
-export const updateFishForm = (refs: FormRefs, state: TankState, raw: string) => { refs.gallons.value = raw; const valid = state.gallons !== null; refs.add.disabled = !valid; refs.error.textContent = valid || raw === "" ? "" : "Masukkan ukuran tank yang valid (>0 gallon)." }
+export const updateFishForm = (refs: FormRefs, state: TankState, raw: string) => { refs.gallons.value = raw; const valid = state.gallons !== null; refs.add.disabled = !valid; refs.gallons.setAttribute("aria-invalid", String(!valid && raw !== "")); refs.error.textContent = valid || raw === "" ? "" : "Masukkan ukuran tank yang valid (>0 gallon)." }
