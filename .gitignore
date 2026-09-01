@@ -1,0 +1,5 @@
+dist/
+.playwright-mcp/
+docs/
+MASTER-PROMPT.md
+.DS_Store
