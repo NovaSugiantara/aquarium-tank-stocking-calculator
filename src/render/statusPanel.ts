@@ -1,0 +1,11 @@
+import { formatNumber, getHeadroom, getRatio, getStockStatus, getTotalInches } from "../calculator.js"
+import type { TankState } from "../types.js"
+
+export const renderStatus = (root: HTMLElement, state: TankState) => {
+  const total = getTotalInches(state.fish), gallons = state.gallons, ratio = getRatio(total, gallons), status = ratio === null ? null : getStockStatus(ratio), headroom = getHeadroom(total, gallons)
+  root.className = `panel status-panel ${status ?? ""}`
+  if (!status || ratio === null || headroom === null || gallons === null) { root.innerHTML = `<div class="panel-head"><h2 id="status-title" class="panel-title">Tank signal</h2><span class="status-mark">🫧</span></div><div class="status-empty">Enter a valid tank size to see your stocking signal.</div><div class="summary"><div><strong>${formatNumber(total)}</strong><span>fish inches</span></div><div><strong>—</strong><span>ratio</span></div><div><strong>—</strong><span>capacity left</span></div></div>`; return }
+  const copy = { safe: "Room left for a calm setup", "getting-full": "Approaching your tank limit", overcrowded: "Over the tank's capacity" }[status]
+  const label = { safe: "Safe", "getting-full": "Getting full", overcrowded: "Overcrowded" }[status], emoji = { safe: "🟢", "getting-full": "🟡", overcrowded: "🔴" }[status]
+  root.innerHTML = `<div class="status-top"><div><div class="metric-label">Current load</div><div class="number">${formatNumber(total)}<small> in</small></div></div><div class="status-mark" aria-hidden="true">${emoji}</div></div><div class="status-name">${label}</div><div class="status-copy">${copy}</div><div class="water" role="img" aria-label="Water level at ${formatNumber(ratio * 100)} percent"><div class="water-fill ${status}" style="width:${Math.min(ratio * 100, 100)}%"></div></div><div class="water-scale"><span>0 in</span><span>tank limit · ${formatNumber(gallons)} gal</span></div><div class="water-copy">${headroom >= 0 ? `${formatNumber(headroom)} inch${headroom === 1 ? "" : "es"} left` : `${formatNumber(Math.abs(headroom))} inch${Math.abs(headroom) === 1 ? "" : "es"} over capacity`}</div><div class="summary"><div><strong>${formatNumber(total)}</strong><span>fish inches</span></div><div><strong>${formatNumber(ratio)}</strong><span>in / gallon</span></div><div><strong>${formatNumber(gallons)}</strong><span>gallons</span></div></div>`
+}

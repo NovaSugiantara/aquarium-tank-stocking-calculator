@@ -1,0 +1,10 @@
+import type { Species, TankState } from "../types.js"
+
+export interface FormRefs { form: HTMLFormElement; gallons: HTMLInputElement; species: HTMLSelectElement; add: HTMLButtonElement; error: HTMLElement }
+export const mountFishForm = (root: HTMLElement, species: readonly Species[], onSubmit: () => void, onReset: () => void): FormRefs => {
+  root.innerHTML = `<div class="panel-head"><h2 id="form-title" class="panel-title">Build your list</h2><span class="panel-note">Step 1 of 2</span></div><form><div class="field"><label for="gallons">Tank size</label><input id="gallons" type="number" min="0.1" step="0.1" placeholder="10" inputmode="decimal" aria-describedby="gallon-hint gallon-error"><p id="gallon-hint" class="hint">Enter US gallons. Fish stay in your list if you edit this later.</p><p id="gallon-error" class="error" role="alert"></p></div><div class="field"><label for="species">Fish to add</label><select id="species" aria-label="Choose fish species">${species.map(item => `<option value="${item.id}">${item.emoji} ${item.name} · ${item.inchSize} in</option>`).join("")}</select></div><div class="form-actions"><button class="primary" type="submit">Add fish</button><button class="secondary" type="button">Reset</button></div></form>`
+  const form = root.querySelector("form") as HTMLFormElement, gallons = root.querySelector("#gallons") as HTMLInputElement, select = root.querySelector("#species") as HTMLSelectElement, add = root.querySelector(".primary") as HTMLButtonElement, error = root.querySelector("#gallon-error") as HTMLElement
+  form.addEventListener("submit", event => { event.preventDefault(); onSubmit() }); root.querySelector(".secondary")?.addEventListener("click", onReset)
+  return { form, gallons, species: select, add, error }
+}
+export const updateFishForm = (refs: FormRefs, state: TankState, raw: string) => { refs.gallons.value = raw; const valid = state.gallons !== null; refs.add.disabled = !valid; refs.error.textContent = valid || raw === "" ? "" : "Masukkan ukuran tank yang valid (>0 gallon)." }
