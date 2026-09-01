@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc && cp index.html dist/index.html",
+    "build": "tsc && cp index.html style.css dist/",
     "test": "npm run build && node --test dist/tests/*.test.js"
   },
   "devDependencies": { "@types/node": "^22.10.0", "typescript": "^5.6.3" }
